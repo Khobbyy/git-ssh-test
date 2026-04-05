@@ -1,10 +1,10 @@
-# Git SSH Setup Guide (Mac) — Complete Workflow
+#  Git SSH Setup Guide (Mac) — Complete Workflow
 
-This guide walks you through setting up Git with SSH authentication and reusing it for all future projects.
+This guide walks you through setting up Git with SSH authentication and reusing it for all future projects — including making your setup **persist across restarts**.
 
 ---
 
-# 1. Set Your Global Git Identity (One-Time Setup)
+#  1. Set Your Global Git Identity (One-Time Setup)
 
 ```bash
 git config --global user.name "Your Name"
@@ -19,7 +19,7 @@ git config --global --list
 
 ---
 
-# 2. Generate an SSH Key (One-Time Setup)
+#  2. Generate an SSH Key (One-Time Setup)
 
 Check if you already have one:
 
@@ -33,29 +33,64 @@ If you don’t see `id_ed25519`, create one:
 ssh-keygen -t ed25519 -C "your-email@example.com"
 ```
 
-### أثناء prompts:
+### During prompts:
 
 * Press **Enter** to accept default file location
 * Enter a **passphrase** (recommended)
 
 ---
 
-# 3. Start SSH Agent & Add Key
+# ⚙️ 3. Start SSH Agent & Add Key
 
 ```bash
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
 ```
 
-(Optional — persist in macOS Keychain):
+---
+
+#  4. Store Passphrase in macOS Keychain (Important)
 
 ```bash
 ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 ```
 
+ This ensures you don’t re-enter your passphrase repeatedly.
+
 ---
 
-# 4. Copy Public Key
+# 5. Make It Persist Across Restarts (Very Important)
+
+Create or edit your SSH config file:
+
+```bash
+nano ~/.ssh/config
+```
+
+Add the following:
+
+```bash
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+```
+
+Save:
+
+* Press `CTRL + X`
+* Press `Y`
+* Press `Enter`
+
+###  What this does:
+
+* Automatically loads your SSH key on startup
+* Uses macOS Keychain to unlock it
+* Prevents repeated passphrase prompts after reboot
+
+---
+
+#  6. Copy Public Key
 
 ```bash
 pbcopy < ~/.ssh/id_ed25519.pub
@@ -63,7 +98,7 @@ pbcopy < ~/.ssh/id_ed25519.pub
 
 ---
 
-# 5. Add SSH Key to GitHub (One-Time Setup)
+#  7. Add SSH Key to GitHub (One-Time Setup)
 
 1. Go to GitHub → Settings
 2. Navigate to **SSH and GPG keys**
@@ -73,7 +108,7 @@ pbcopy < ~/.ssh/id_ed25519.pub
 
 ---
 
-# 6. Test SSH Connection
+# 8. Test SSH Connection
 
 ```bash
 ssh -T git@github.com
@@ -87,14 +122,14 @@ Hi username! You've successfully authenticated...
 
 ---
 
-# 7. Create and Push a Test Project
+# 9. Create and Push a Test Project
 
 ## Create project
 
 ```bash
 mkdir git-ssh-test
 cd git-ssh-test
-echo "Hello Git SSH" > hello.txt
+echo "Hello Git SSH " > hello.txt
 ```
 
 ## Initialize Git
@@ -112,9 +147,7 @@ git commit -m "Initial commit"
 
 ---
 
-# 8. Connect to GitHub Using SSH
-
-Create a repo on GitHub, then run:
+# 10. Connect to GitHub Using SSH
 
 ```bash
 git remote add origin git@github.com:your-username/git-ssh-test.git
@@ -122,7 +155,7 @@ git remote add origin git@github.com:your-username/git-ssh-test.git
 
 ---
 
-# 9. Push Code
+# 11. Push Code
 
 ```bash
 git branch -M main
@@ -131,7 +164,7 @@ git push -u origin main
 
 ---
 
-# 🔍 10. Verify Remote Uses SSH
+# 12. Verify Remote Uses SSH
 
 ```bash
 git remote -v
@@ -147,9 +180,11 @@ git@github.com:your-username/repo.git
 
 # ♻️ Using SSH for Future Projects
 
-Once SSH is set up, **you do NOT repeat the setup**. Just follow:
+Once SSH is set up, you **do NOT repeat setup again**.
 
-## For a NEW project:
+---
+
+##  For a NEW project:
 
 ```bash
 mkdir project-name
@@ -165,21 +200,14 @@ git push -u origin main
 
 ## For an EXISTING repo (switch HTTPS → SSH)
 
-Check remote:
-
 ```bash
 git remote -v
-```
-
-If it shows HTTPS:
-
-```bash
 git remote set-url origin git@github.com:your-username/repo.git
 ```
 
 ---
 
-## For CLONING repos (use SSH)
+## 📥 For CLONING repos (use SSH)
 
 ```bash
 git clone git@github.com:your-username/repo.git
@@ -187,11 +215,9 @@ git clone git@github.com:your-username/repo.git
 
 ---
 
-# Troubleshooting
+#  Troubleshooting
 
 ## ❌ Permission denied (publickey)
-
-Fix:
 
 ```bash
 ssh-add ~/.ssh/id_ed25519
@@ -205,16 +231,23 @@ Check:
 
 ---
 
-## ❌ Still asking for password
+## ❌ Still asking for passphrase repeatedly
 
-Cause:
+Ensure:
 
-* Remote is using HTTPS instead of SSH
-
-Fix:
+* You ran:
 
 ```bash
-git remote set-url origin git@github.com:your-username/repo.git
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+```
+
+* Your config file contains:
+
+```bash
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
 ```
 
 ---
@@ -223,31 +256,36 @@ git remote set-url origin git@github.com:your-username/repo.git
 
 * **Public key** → stored on GitHub
 * **Private key** → stays on your Mac
-* **SSH** → allows secure, password-free authentication
+* **SSH** → enables secure, password-free authentication
+* **Keychain** → remembers your passphrase securely
 
 ---
 
-# ✅ Final Result
+# Final Result
 
 After setup:
 
 * No username/password prompts
-* Only passphrase (once, if using Keychain)
-* Faster and secure workflow
+* No repeated passphrase prompts (even after restart)
+* Seamless Git workflow
 
 ---
 
-# Summary
+#  Summary
 
 You only do this ONCE:
 
 * Generate SSH key
 * Add to GitHub
-* Configure SSH agent
+* Add to Keychain
+* Configure SSH config for persistence
 
-After that, every repo:
+After that:
 
-* Use SSH remote (`git@github.com:...`)
+* Use SSH (`git@github.com:...`)
 * Push normally
+* Everything works automatically
 
 ---
+
+Happy coding 
