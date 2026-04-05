@@ -1,10 +1,10 @@
-# 🚀 Git SSH Setup Guide (Mac) — Complete Workflow
+# Git SSH Setup Guide (Mac) — Complete Workflow
 
 This guide walks you through setting up Git with SSH authentication and reusing it for all future projects.
 
 ---
 
-# 🧩 1. Set Your Global Git Identity (One-Time Setup)
+# 1. Set Your Global Git Identity (One-Time Setup)
 
 ```bash
 git config --global user.name "Your Name"
@@ -19,7 +19,7 @@ git config --global --list
 
 ---
 
-# 🔐 2. Generate an SSH Key (One-Time Setup)
+# 2. Generate an SSH Key (One-Time Setup)
 
 Check if you already have one:
 
@@ -40,7 +40,7 @@ ssh-keygen -t ed25519 -C "your-email@example.com"
 
 ---
 
-# ⚙️ 3. Start SSH Agent & Add Key
+# 3. Start SSH Agent & Add Key
 
 ```bash
 eval "$(ssh-agent -s)"
@@ -55,7 +55,7 @@ ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 
 ---
 
-# 📋 4. Copy Public Key
+# 4. Copy Public Key
 
 ```bash
 pbcopy < ~/.ssh/id_ed25519.pub
