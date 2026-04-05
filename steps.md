@@ -63,7 +63,7 @@ pbcopy < ~/.ssh/id_ed25519.pub
 
 ---
 
-# 🌐 5. Add SSH Key to GitHub (One-Time Setup)
+# 5. Add SSH Key to GitHub (One-Time Setup)
 
 1. Go to GitHub → Settings
 2. Navigate to **SSH and GPG keys**
@@ -73,7 +73,7 @@ pbcopy < ~/.ssh/id_ed25519.pub
 
 ---
 
-# 🧪 6. Test SSH Connection
+# 6. Test SSH Connection
 
 ```bash
 ssh -T git@github.com
@@ -87,14 +87,14 @@ Hi username! You've successfully authenticated...
 
 ---
 
-# 📁 7. Create and Push a Test Project
+# 7. Create and Push a Test Project
 
 ## Create project
 
 ```bash
 mkdir git-ssh-test
 cd git-ssh-test
-echo "Hello Git SSH 🚀" > hello.txt
+echo "Hello Git SSH" > hello.txt
 ```
 
 ## Initialize Git
@@ -112,7 +112,7 @@ git commit -m "Initial commit"
 
 ---
 
-# 🔗 8. Connect to GitHub Using SSH
+# 8. Connect to GitHub Using SSH
 
 Create a repo on GitHub, then run:
 
@@ -122,7 +122,7 @@ git remote add origin git@github.com:your-username/git-ssh-test.git
 
 ---
 
-# 🚀 9. Push Code
+# 9. Push Code
 
 ```bash
 git branch -M main
@@ -187,7 +187,7 @@ git clone git@github.com:your-username/repo.git
 
 ---
 
-# ⚠️ Troubleshooting
+# Troubleshooting
 
 ## ❌ Permission denied (publickey)
 
@@ -219,7 +219,7 @@ git remote set-url origin git@github.com:your-username/repo.git
 
 ---
 
-# 🧠 Key Concepts
+# Key Concepts
 
 * **Public key** → stored on GitHub
 * **Private key** → stays on your Mac
@@ -237,7 +237,7 @@ After setup:
 
 ---
 
-# 🎯 Summary
+# Summary
 
 You only do this ONCE:
 
